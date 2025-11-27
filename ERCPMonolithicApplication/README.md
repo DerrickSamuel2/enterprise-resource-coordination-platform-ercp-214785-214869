@@ -1,82 +1,85 @@
-# Lightweight React Template for KAVIA
+# ERCP Monolithic React Application
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+A lightweight React (CRA) frontend scaffolding core pages and routes for ERCP: Tasks, Workflows, Resources, Integrations, Reports, Audit, Settings, and Health. Includes a layout shell, feature flag support, global error boundary, a simple toast system, and an API client reading environment variables.
 
-## Features
+## Quick Start
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+- `npm start` — run in development
+- `npm test` — run tests
+- `npm run build` — production build
 
-## Getting Started
+Open http://localhost:3000
 
-In the project directory, you can run:
+## Core Structure
 
-### `npm start`
+- `src/routes/AppRouter.js` — route definitions with code splitting (React.lazy)
+- `src/components/Layout.js` — responsive shell with topbar and sidebar navigation
+- `src/components/ErrorBoundary.js` — global error catcher
+- `src/components/Toasts.js` — lightweight global toast alerts
+- `src/store/store.js` — simple context-based global store (feature flags, toasts)
+- `src/services/apiClient.js` — API client using env vars for base URL and health check
+- `src/pages/*` — placeholder pages for each section
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Routes
 
-### `npm test`
+- `/` Home
+- `/tasks`
+- `/workflows` (visibility controlled by feature flags)
+- `/resources`
+- `/integrations`
+- `/reports` (visibility controlled by feature flags)
+- `/audit`
+- `/settings`
+- `/health`
 
-Launches the test runner in interactive watch mode.
+## Environment Variables
 
-### `npm run build`
+The following variables are referenced. Provide them in `.env` as needed (do not commit secrets):
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- `REACT_APP_API_BASE` — Preferred base URL for backend API.
+- `REACT_APP_BACKEND_URL` — Fallback base URL if API_BASE is not set.
+- `REACT_APP_FRONTEND_URL` — Optional, for future use (links, metadata).
+- `REACT_APP_WS_URL` — Optional, for future realtime features.
+- `REACT_APP_NODE_ENV` — Environment name.
+- `REACT_APP_NEXT_TELEMETRY_DISABLED` — Not used by CRA, safe to leave.
+- `REACT_APP_ENABLE_SOURCE_MAPS` — Enable/disable source maps.
+- `REACT_APP_PORT` — Dev server port (CRA uses 3000 by default).
+- `REACT_APP_TRUST_PROXY` — Optional.
+- `REACT_APP_LOG_LEVEL` — Optional logging level (future use).
+- `REACT_APP_HEALTHCHECK_PATH` — Health endpoint path (default `/health`).
+- `REACT_APP_FEATURE_FLAGS` — Controls feature visibility (see below).
+- `REACT_APP_EXPERIMENTS_ENABLED` — Enables experiment toggles.
 
-## Customization
+### Feature Flags
 
-### Colors
+`REACT_APP_FEATURE_FLAGS` accepts:
+- Comma-separated list: `workflows,reports`
+- JSON array: `["workflows","reports"]`
+- JSON object: `{"workflows": true, "reports": false}`
 
-The main brand colors are defined as CSS variables in `src/App.css`:
+Visibility:
+- Workflows route hidden if `workflows` flag is explicitly `false`
+- Reports route hidden if `reports` flag is explicitly `false`
 
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
-```
+### Health Check
 
-### Components
+The Health page calls the configured endpoint using:
+- `REACT_APP_HEALTHCHECK_PATH` (default `/health`)
+- Base URL from `REACT_APP_API_BASE` or `REACT_APP_BACKEND_URL`
 
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
+## Extending Pages
 
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
+- Add a new file under `src/pages/YourPage.js`
+- Export a default React component
+- Register a route in `src/routes/AppRouter.js`
+- Add navigation links in `src/components/Layout.js`
 
-## Learn More
+## Styling
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Base theme is defined in `src/App.css` with CSS variables supporting light/dark mode.
+- Layout styles in `src/components/layout.css`
 
-### Code Splitting
+## Notes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- This project intentionally avoids heavy UI frameworks.
+- No backend logic is included; API endpoints are assumed to be available at the configured base URL.
