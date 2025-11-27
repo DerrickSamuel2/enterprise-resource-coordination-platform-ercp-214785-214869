@@ -1,0 +1,4 @@
+{
+    "command": "npm install",
+    "working_directory": "/home/kavia/workspace/code-generation/enterprise-resource-coordination-platform-ercp-214785-214869/ERCPMonolithicApplication"
+}
