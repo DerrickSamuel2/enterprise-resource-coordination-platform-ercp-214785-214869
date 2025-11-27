@@ -1,1 +1,3 @@
-# enterprise-resource-coordination-platform-ercp-214785-214869
+# Project Repository
+
+This is the initial README file for the project.
